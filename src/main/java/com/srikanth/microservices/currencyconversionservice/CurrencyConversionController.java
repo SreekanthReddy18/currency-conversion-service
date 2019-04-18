@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,8 @@ import com.srikanth.microservices.currencyconversionservice.bean.CurrencyConvers
 @RestController
 public class CurrencyConversionController {
 	
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(CurrencyConversionController.class);
+
 	@Autowired
 	private CurrencyExchangeServiceProxy proxy;
 
@@ -35,6 +38,7 @@ public class CurrencyConversionController {
 			@PathVariable String to, @PathVariable BigDecimal quantity) {
 		
 		CurrencyConversionBean response = proxy.retriveExchangeValue(from, to);
+		logger.info("{}",response);
 		return new CurrencyConversionBean(response.getId(), from, to, response.getConversionMultiple(), quantity,quantity.multiply(response.getConversionMultiple()), response.getPort());
 	}
 }
